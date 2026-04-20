@@ -31,7 +31,7 @@
 
 <template>
   <main class="min-h-screen p-6">
-    <h1 class="mb-4 text-xl font-semibold">Mes sondages</h1>
+    <h1 class="mb-4 text-xl font-semibold">Mes sond</h1>
 
     <PollTable :polls="props.polls" />
 
