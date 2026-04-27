@@ -16,10 +16,27 @@ Route::apiResource('v1/posts', ApiPostController::class)
     ->middlewareFor(['update'], ['auth:sanctum', 'abilities:posts:update'])
     ->middlewareFor(['destroy'], ['auth:sanctum', 'abilities:posts:delete']);
 
+//les routes de base accessible par tout le monde => pas besoin detre connecté
 Route::get('/v1/polls/{token}', [ApiPollController::class, 'show']);
+Route::get('/v1/polls/{token}/results', [ApiPollController::class, 'results']);
 
+// Routes nécessitant d'être connecté
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/v1/foo', [ApiFooController::class, 'show']);
     Route::post('/v1/foo', [ApiFooController::class, 'store']);
+
+    //les trucs crud pour les polls
     Route::get('/v1/polls', [ApiPollController::class, 'index']);
+    Route::post('/v1/polls', [ApiPollController::class, 'store']);
+    Route::patch('/v1/polls/{id}', [ApiPollController::class, 'update']);
+    Route::delete('/v1/polls/{id}', [ApiPollController::class, 'destroy']);
+    Route::post('/v1/polls/{id}/start', [ApiPollController::class, 'start']);
+
+    //la route pour ajouter genre les options 
+    Route::post('/v1/polls/{id}/options', [ApiPollController::class, 'storeOption']);
+    Route::patch('/v1/polls/{id}/options/{optionId}', [ApiPollController::class, 'updateOption']);
+    Route::delete('/v1/polls/{id}/options/{optionId}', [ApiPollController::class, 'destroyOption']);
+
+    //la route pour aller voter
+    Route::post('/v1/polls/{token}/vote', [ApiPollController::class, 'vote']);
 });
