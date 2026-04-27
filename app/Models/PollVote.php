@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PollVote extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'poll_option_id',
+        'poll_id',
+    ];
+
     /**
      * Get the poll that owns the vote.
      */
