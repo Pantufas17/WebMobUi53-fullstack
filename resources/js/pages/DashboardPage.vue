@@ -2,6 +2,8 @@
 import { watch } from "vue";
 import { useFetchApi } from "../composables/useFetchApi";
 
+const emit = defineEmits(["navigate"]);
+
 const props = defineProps({
     loginUrl: { type: String, default: null },
 });
@@ -19,6 +21,20 @@ watch(error, handleError);
 
 <template>
     <div>
+        <div
+            style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            "
+        >
+            <h2 style="margin: 0">Mes sondages</h2>
+            <button @click="emit('navigate', '#create')">
+                + Nouveau sondage
+            </button>
+        </div>
+
         <p v-if="loading">Chargement des sondages...</p>
         <p v-else-if="error">Erreur lors du chargement.</p>
         <ul v-else-if="polls">
@@ -30,4 +46,9 @@ watch(error, handleError);
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+</style>
