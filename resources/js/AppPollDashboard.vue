@@ -7,7 +7,7 @@ const props = defineProps({
     loginUrl: { type: String, default: null },
 });
 
-const { currentComponent, currentRoute } = useHashRoute(routes);
+const { currentComponent, currentRoute, navigateTo } = useHashRoute(routes);
 </script>
 
 <template>
@@ -19,6 +19,7 @@ const { currentComponent, currentRoute } = useHashRoute(routes);
                     :is="currentComponent"
                     :key="currentRoute.hash"
                     :loginUrl="props.loginUrl"
+                    @navigate="navigateTo"
                 />
             </KeepAlive>
         </Transition>
