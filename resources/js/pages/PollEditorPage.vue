@@ -1,13 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted, onActivated } from "vue";
 import { useFetchApi } from "../composables/useFetchApi";
+import { currentPoll } from "../stores/currentPoll";
 
 const emit = defineEmits(["navigate"]);
-
 const { fetchApi } = useFetchApi();
 
-const question = ref("");
+const isEdit = computed(() => currentPoll.value !== null);
+
 const title = ref("");
+const question = ref("");
 const options = ref(["", ""]);
 const isDraft = ref(true);
 const allowMultiple = ref(false);
@@ -16,22 +18,50 @@ const duration = ref(null);
 const error = ref(null);
 const loading = ref(false);
 
+function prefill() {
+    if (currentPoll.value) {
+        title.value = currentPoll.value.title ?? "";
+        question.value = currentPoll.value.question;
+        options.value = currentPoll.value.options?.map((o) => o.label) ?? [
+            "",
+            "",
+        ];
+        isDraft.value = !!currentPoll.value.is_draft;
+        allowMultiple.value = !!currentPoll.value.allow_multiple_choices;
+        resultsPublic.value = !!currentPoll.value.results_public;
+        duration.value = currentPoll.value.duration ?? null;
+    } else {
+        title.value = "";
+        question.value = "";
+        options.value = ["", ""];
+        isDraft.value = true;
+        allowMultiple.value = false;
+        resultsPublic.value = false;
+        duration.value = null;
+    }
+}
+
+onMounted(prefill);
+onActivated(prefill);
+
 function addOption() {
     options.value.push("");
 }
 
 function removeOption(index) {
-    if (options.value.length > 2) {
-        options.value.splice(index, 1);
-    }
+    if (options.value.length > 2) options.value.splice(index, 1);
 }
 
 function submit() {
     error.value = null;
     loading.value = true;
 
+    const url = isEdit.value ? `polls/${currentPoll.value.id}` : "polls/";
+    const method = isEdit.value ? "PUT" : "POST";
+
     fetchApi({
-        url: "polls/",
+        url,
+        method,
         data: {
             title: title.value || null,
             question: question.value,
@@ -44,7 +74,7 @@ function submit() {
     })
         .then(() => emit("navigate", "#dashboard"))
         .catch((err) => {
-            error.value = err?.data?.message || "Erreur lors de la création.";
+            error.value = err?.data?.message || "Erreur lors de la sauvegarde.";
         })
         .finally(() => {
             loading.value = false;
@@ -54,7 +84,7 @@ function submit() {
 
 <template>
     <div>
-        <h2>Nouveau sondage</h2>
+        <h2>{{ isEdit ? "Modifier le sondage" : "Nouveau sondage" }}</h2>
 
         <p v-if="error" style="color: red">{{ error }}</p>
 
@@ -132,7 +162,13 @@ function submit() {
             </div>
 
             <button type="submit" :disabled="loading">
-                {{ loading ? "Création..." : "Créer le sondage" }}
+                {{
+                    loading
+                        ? "Sauvegarde..."
+                        : isEdit
+                          ? "Enregistrer"
+                          : "Créer le sondage"
+                }}
             </button>
             <button type="button" @click="emit('navigate', '#dashboard')">
                 Annuler
