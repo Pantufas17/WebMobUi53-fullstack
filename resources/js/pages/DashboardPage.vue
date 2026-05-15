@@ -56,22 +56,54 @@ function editPoll(poll) {
 
         <p v-if="loading">Chargement des sondages...</p>
         <p v-else-if="error">Erreur lors du chargement.</p>
-        <ul v-else-if="polls">
+        <ul v-else-if="polls" style="padding: 0">
             <li
                 v-for="poll in polls"
                 :key="poll.id"
-                style="margin-bottom: 0.5rem"
+                style="
+                    margin-bottom: 1rem;
+                    border: 1px solid #ddd;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    list-style: none;
+                    background: white;
+                "
             >
-                {{ poll.question }}
-                <button @click="editPoll(poll)">Modifier</button>
-                <button
-                    @click="deletePoll(poll.id)"
-                    style="margin-left: 0.5rem; color: red"
+                <div
+                    style="
+                        font-weight: bold;
+                        font-size: 1.1rem;
+                        margin-bottom: 0.5rem;
+                    "
                 >
-                    Supprimer
-                </button>
+                    {{ poll.question }}
+                </div>
+
+                <div
+                    style="margin-bottom: 1rem; color: #666; font-size: 0.9rem"
+                >
+                    Lien de vote :
+                    <a
+                        :href="'/polls/' + poll.secret_token"
+                        target="_blank"
+                        style="color: #4f46e5; text-decoration: underline"
+                    >
+                        Ouvrir le sondage
+                    </a>
+                </div>
+
+                <div>
+                    <button @click="editPoll(poll)">Modifier</button>
+                    <button
+                        @click="deletePoll(poll.id)"
+                        style="margin-left: 0.5rem; color: red"
+                    >
+                        Supprimer
+                    </button>
+                </div>
             </li>
         </ul>
+
         <p v-else>Aucun sondage.</p>
     </div>
 </template>

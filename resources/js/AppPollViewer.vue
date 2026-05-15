@@ -84,6 +84,13 @@ const showResults = computed(() => {
 
 <template>
     <main style="max-width: 640px; margin: 2rem auto; padding: 1rem">
+        <nav v-if="userId" style="margin-bottom: 2rem">
+            <a
+                href="/polls/dashboard"
+                style="color: #4f46e5; text-decoration: none"
+                >← Retour à mes sondages</a
+            >
+        </nav>
         <p v-if="loading">Chargement du sondage...</p>
         <p v-else-if="error" style="color: red">
             Sondage introuvable ou erreur.

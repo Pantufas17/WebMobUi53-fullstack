@@ -20,9 +20,7 @@ Route::get('/about', function () {
     return view('about');
 });
 
-Route::get('/polls/{token}', function (string $token) {
-    return view('polls.viewer', ['token' => $token]);
-})->where('token', '[A-Za-z0-9]+');
+
 
 
 Route::get('/@{username}', [ProfileController::class, 'show'])->where('username', '[A-Za-z0-9-_]+');
@@ -46,3 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('tokens', TokenController::class)->only(['index', 'create', 'store', 'destroy']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
+
+Route::get('/polls/{token}', function (string $token) {
+    return view('polls.viewer', ['token' => $token]);
+})->where('token', '[A-Za-z0-9]+');
