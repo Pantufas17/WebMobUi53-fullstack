@@ -8,7 +8,7 @@ const props = defineProps({
     loginUrl: { type: String, default: null },
 });
 
-const { fetchApiToRef } = useFetchApi();
+const { fetchApiToRef, fetchApi } = useFetchApi();
 const {
     data: polls,
     error,
@@ -22,9 +22,14 @@ function handleError(err) {
 }
 
 watch(error, handleError);
-
-//re-fetch les sondages à chaque fois qu'on revient sur cette page
 onActivated(() => fetchNow());
+
+function deletePoll(id) {
+    if (!confirm("Supprimer ce sondage ?")) return;
+    fetchApi({ url: `polls/${id}`, method: "DELETE" })
+        .then(() => fetchNow())
+        .catch((err) => console.error(err));
+}
 </script>
 
 <template>
@@ -46,8 +51,18 @@ onActivated(() => fetchNow());
         <p v-if="loading">Chargement des sondages...</p>
         <p v-else-if="error">Erreur lors du chargement.</p>
         <ul v-else-if="polls">
-            <li v-for="poll in polls" :key="poll.id">
+            <li
+                v-for="poll in polls"
+                :key="poll.id"
+                style="margin-bottom: 0.5rem"
+            >
                 {{ poll.question }}
+                <button
+                    @click="deletePoll(poll.id)"
+                    style="margin-left: 1rem; color: red"
+                >
+                    Supprimer
+                </button>
             </li>
         </ul>
         <p v-else>Aucun sondage.</p>
