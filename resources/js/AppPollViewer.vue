@@ -30,7 +30,20 @@ usePolling(fetchNow);
 const selectedOptionIds = ref([]);
 const voteError = ref(null);
 const voteLoading = ref(false);
+const isChangingVote = ref(false); // AJOUTÉ : pour savoir si on est en train de modifier
+
 const voted = computed(() => userVoteIds.value.length > 0);
+
+// Quand les données du sondage arrivent, on pré-remplit les choix de l'utilisateur
+watch(
+    userVoteIds,
+    (newIds) => {
+        if (newIds.length > 0 && selectedOptionIds.value.length === 0) {
+            selectedOptionIds.value = [...newIds];
+        }
+    },
+    { immediate: true },
+);
 
 function toggleOption(optionId) {
     if (!poll.value.allow_multiple_choices) {
@@ -49,13 +62,20 @@ function submitVote() {
         url: `polls/${props.token}/vote`,
         data: { option_ids: selectedOptionIds.value },
     })
-        .then(() => fetchNow())
+        .then(() => {
+            isChangingVote.value = false;
+            fetchNow();
+        })
         .catch((err) => {
             voteError.value = err?.data?.message || "Erreur lors du vote.";
         })
         .finally(() => {
             voteLoading.value = false;
         });
+}
+
+function startChangeVote() {
+    isChangingVote.value = true;
 }
 
 // Résultats
@@ -91,6 +111,7 @@ const showResults = computed(() => {
                 >← Retour à mes sondages</a
             >
         </nav>
+
         <p v-if="loading">Chargement du sondage...</p>
         <p v-else-if="error" style="color: red">
             Sondage introuvable ou erreur.
@@ -102,14 +123,15 @@ const showResults = computed(() => {
                 <em>{{ poll.question }}</em>
             </p>
 
-            <!-- Sondage terminé -->
             <p v-if="isPollEnded" style="color: orange; font-weight: bold">
                 Ce sondage est terminé, il n'est plus possible de voter.
             </p>
 
-            <!-- Formulaire de vote -->
-            <section v-if="canVote && !voted && !isPollEnded">
-                <h2>Voter</h2>
+            <!-- Formulaire de vote (affiché si pas voté OU si on est en train de modifier) -->
+            <section
+                v-if="canVote && (!voted || isChangingVote) && !isPollEnded"
+            >
+                <h2>{{ isChangingVote ? "Modifier mon vote" : "Voter" }}</h2>
                 <p v-if="voteError" style="color: red">{{ voteError }}</p>
                 <div
                     v-for="option in poll.options"
@@ -134,21 +156,48 @@ const showResults = computed(() => {
                     @click="submitVote"
                     :disabled="voteLoading || selectedOptionIds.length === 0"
                 >
-                    {{ voteLoading ? "Envoi..." : "Soumettre mon vote" }}
+                    {{
+                        voteLoading
+                            ? "Envoi..."
+                            : isChangingVote
+                              ? "Mettre à jour mon vote"
+                              : "Soumettre mon vote"
+                    }}
+                </button>
+                <button
+                    v-if="isChangingVote"
+                    @click="isChangingVote = false"
+                    style="background: gray; margin-left: 0.5rem"
+                >
+                    Annuler
                 </button>
             </section>
 
-            <!--deja voté -->
-            <p v-else-if="voted && !isPollEnded" style="color: green">
-                Vous avez déjà voté.
-            </p>
+            <!-- Déjà voté -->
+            <div v-else-if="voted && !isPollEnded" style="margin-bottom: 2rem">
+                <p
+                    style="
+                        color: green;
+                        display: inline-block;
+                        margin-right: 1rem;
+                    "
+                >
+                    ✅ Vous avez déjà voté.
+                </p>
+                <button
+                    v-if="poll.allow_vote_change"
+                    @click="startChangeVote"
+                    style="background: #10b981"
+                >
+                    Modifier mon vote
+                </button>
+            </div>
 
-            <!--quand pas connecte -->
             <p v-else-if="!userId && !poll.results_public">
                 <a :href="loginUrl">Connectez-vous</a> pour voter.
             </p>
 
-            <!--Résultats graphiques -->
+            <!-- Résultats -->
             <section v-if="showResults" style="margin-top: 2rem">
                 <h2>
                     Résultats
@@ -192,7 +241,6 @@ const showResults = computed(() => {
                 </div>
             </section>
 
-            <!-- Anonyme, résultats non publics -->
             <p v-else-if="!userId">
                 Les résultats de ce sondage ne sont pas publics.
             </p>

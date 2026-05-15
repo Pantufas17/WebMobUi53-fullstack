@@ -14,6 +14,7 @@ const options = ref(["", ""]);
 const isDraft = ref(true);
 const allowMultiple = ref(false);
 const resultsPublic = ref(false);
+const allowVoteChange = ref(false);
 const duration = ref(null);
 const error = ref(null);
 const loading = ref(false);
@@ -29,6 +30,7 @@ function prefill() {
         isDraft.value = !!currentPoll.value.is_draft;
         allowMultiple.value = !!currentPoll.value.allow_multiple_choices;
         resultsPublic.value = !!currentPoll.value.results_public;
+        allowVoteChange.value = !!currentPoll.value.allow_vote_change; // AJOUTÉ
         duration.value = currentPoll.value.duration ?? null;
     } else {
         title.value = "";
@@ -37,6 +39,7 @@ function prefill() {
         isDraft.value = true;
         allowMultiple.value = false;
         resultsPublic.value = false;
+        allowVoteChange.value = false;
         duration.value = null;
     }
 }
@@ -69,6 +72,7 @@ function submit() {
             is_draft: isDraft.value,
             allow_multiple_choices: allowMultiple.value,
             results_public: resultsPublic.value,
+            allow_vote_change: allowVoteChange.value,
             duration: duration.value ? Number(duration.value) : null,
         },
     })
@@ -146,6 +150,10 @@ function submit() {
                 <label
                     ><input v-model="resultsPublic" type="checkbox" /> Résultats
                     publics</label
+                ><br />
+                <label
+                    ><input v-model="allowVoteChange" type="checkbox" />
+                    Autoriser le changement de vote</label
                 >
             </div>
 

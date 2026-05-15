@@ -34,6 +34,7 @@ class ApiPollController extends Controller
             'is_draft'               => 'boolean',
             'allow_multiple_choices' => 'boolean',
             'results_public'         => 'boolean',
+            'allow_vote_change'      => 'boolean',
             'duration'               => 'nullable|integer|min:1',
         ]);
 
@@ -44,9 +45,9 @@ class ApiPollController extends Controller
             'is_draft'               => $validated['is_draft'] ?? true,
             'allow_multiple_choices' => $validated['allow_multiple_choices'] ?? false,
             'results_public'         => $validated['results_public'] ?? false,
+            'allow_vote_change'      => $validated['allow_vote_change'] ?? false,
             'duration'               => $validated['duration'] ?? null,
             'starts_at'              => now(),
-            // On calcule la date de fin si une durée est fournie
             'ends_at'                => $validated['duration'] ? now()->addSeconds((int)$validated['duration']) : null,
         ]);
 
@@ -74,6 +75,7 @@ class ApiPollController extends Controller
             'is_draft'               => 'boolean',
             'allow_multiple_choices' => 'boolean',
             'results_public'         => 'boolean',
+            'allow_vote_change'      => 'boolean',
             'duration'               => 'nullable|integer|min:1',
         ]);
 
@@ -83,8 +85,8 @@ class ApiPollController extends Controller
             'is_draft'               => $validated['is_draft'] ?? $poll->is_draft,
             'allow_multiple_choices' => $validated['allow_multiple_choices'] ?? $poll->allow_multiple_choices,
             'results_public'         => $validated['results_public'] ?? $poll->results_public,
+            'allow_vote_change'      => $validated['allow_vote_change'] ?? $poll->allow_vote_change,
             'duration'               => $validated['duration'] ?? null,
-            // On met à jour la date de fin
             'ends_at'                => $validated['duration'] ? now()->addSeconds((int)$validated['duration']) : null,
         ]);
 
