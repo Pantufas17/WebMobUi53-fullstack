@@ -1,5 +1,5 @@
 <script setup>
-import { watch } from "vue";
+import { onActivated, watch } from "vue";
 import { useFetchApi } from "../composables/useFetchApi";
 
 const emit = defineEmits(["navigate"]);
@@ -9,7 +9,12 @@ const props = defineProps({
 });
 
 const { fetchApiToRef } = useFetchApi();
-const { data: polls, error, loading } = fetchApiToRef({ url: "polls/" });
+const {
+    data: polls,
+    error,
+    loading,
+    fetchNow,
+} = fetchApiToRef({ url: "polls/" });
 
 function handleError(err) {
     if (!err) return;
@@ -17,6 +22,9 @@ function handleError(err) {
 }
 
 watch(error, handleError);
+
+//re-fetch les sondages à chaque fois qu'on revient sur cette page
+onActivated(() => fetchNow());
 </script>
 
 <template>

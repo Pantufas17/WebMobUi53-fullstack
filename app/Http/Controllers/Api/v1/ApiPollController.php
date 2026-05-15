@@ -61,4 +61,15 @@ class ApiPollController extends Controller
 
         return $poll;
     }
+
+    public function destroy(Request $request, Poll $poll)
+    {
+        if ($poll->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Forbidden.'], 403);
+        }
+
+        $poll->delete();
+
+        return response()->json(['message' => 'Poll deleted.']);
+    }
 }
