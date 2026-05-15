@@ -67,4 +67,4 @@ Ce projet est une application de gestion et de participation à des sondages, r�
 Accédez ensuite à `http://127.0.0.1:8000`.
 
 ---
-*Réalisé par Nuno Amaro Faria (M53-2 COMEM) dans le cadre du cours WebMobUi53 - Mai 2026.*
+*Réalisé par Nuno Guilherme Amaro Faria (M53-2 COMEM) dans le cadre du cours WebMobUi53 - Mai 2026.*
