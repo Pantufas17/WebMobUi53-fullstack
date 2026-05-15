@@ -1,6 +1,7 @@
 <script setup>
 import { onActivated, watch } from "vue";
 import { useFetchApi } from "../composables/useFetchApi";
+import { setCurrentPoll } from "../stores/currentPoll";
 
 const emit = defineEmits(["navigate"]);
 
@@ -30,6 +31,11 @@ function deletePoll(id) {
         .then(() => fetchNow())
         .catch((err) => console.error(err));
 }
+
+function editPoll(poll) {
+    setCurrentPoll(poll);
+    emit("navigate", "#edit");
+}
 </script>
 
 <template>
@@ -57,9 +63,10 @@ function deletePoll(id) {
                 style="margin-bottom: 0.5rem"
             >
                 {{ poll.question }}
+                <button @click="editPoll(poll)">Modifier</button>
                 <button
                     @click="deletePoll(poll.id)"
-                    style="margin-left: 1rem; color: red"
+                    style="margin-left: 0.5rem; color: red"
                 >
                     Supprimer
                 </button>
@@ -73,5 +80,6 @@ function deletePoll(id) {
 button {
     padding: 0.5rem 1rem;
     cursor: pointer;
+    margin-left: 0.5rem;
 }
 </style>
