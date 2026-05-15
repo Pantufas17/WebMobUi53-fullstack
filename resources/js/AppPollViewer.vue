@@ -182,7 +182,7 @@ const showResults = computed(() => {
                         margin-right: 1rem;
                     "
                 >
-                    ✅ Vous avez déjà voté.
+                    Vous avez déjà voté.
                 </p>
                 <button
                     v-if="poll.allow_vote_change"
