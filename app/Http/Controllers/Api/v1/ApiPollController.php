@@ -46,6 +46,44 @@ class ApiPollController extends Controller
         return $poll->load('options');
     }
 
+    public function update(Request $request, Poll $poll)
+    {
+        if ($poll->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Forbidden.'], 403);
+        }
+
+        $validated = $request->validate([
+            'title'                  => 'nullable|string|max:255',
+            'question'               => 'required|string|max:255',
+            'options'                => 'required|array|min:2',
+            'options.*'              => 'required|string|max:255',
+            'is_draft'               => 'boolean',
+            'allow_multiple_choices' => 'boolean',
+            'results_public'         => 'boolean',
+            'duration'               => 'nullable|integer|min:1',
+        ]);
+
+        $poll->update([
+            'title'                  => $validated['title'] ?? null,
+            'question'               => $validated['question'],
+            'is_draft'               => $validated['is_draft'] ?? $poll->is_draft,
+            'allow_multiple_choices' => $validated['allow_multiple_choices'] ?? $poll->allow_multiple_choices,
+            'results_public'         => $validated['results_public'] ?? $poll->results_public,
+            'duration'               => $validated['duration'] ?? null,
+        ]);
+
+
+        $poll->options()->delete();
+        foreach ($validated['options'] as $label) {
+            $poll->options()->create(['label' => $label]);
+        }
+
+        return $poll->load('options');
+    }
+
+
+
+
     /**
      * Display the specified poll by its secret token.
      */
