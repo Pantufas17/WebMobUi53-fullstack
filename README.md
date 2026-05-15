@@ -1,6 +1,6 @@
 # Application de Sondage (Fullstack Laravel + Vue.js)
 
-Ce projet est une application de gestion et de participation à des sondages, réalisée dans le cadre du TP WebMobUi53 par **Nuno Amaro M53-2**. Elle permet aux utilisateurs connectés de créer des sondages personnalisés et aux utilisateurs (connectés ou non) d'y répondre.
+Ce projet est une application de gestion et de participation à des sondages, réalisée dans le cadre du cours WebMobUi par **Nuno Amaro M53-2**. Elle permet aux utilisateurs connectés de créer des sondages personnalisés et aux utilisateurs (connectés ou non) d'y répondre.
 
 ## 🚀 Fonctionnalités implémentées
 
