@@ -2,7 +2,7 @@
 
 Ce projet est une application de gestion et de participation à des sondages, réalisée dans le cadre du cours WebMobUi par **Nuno Amaro M53-2**. Elle permet aux utilisateurs connectés de créer des sondages personnalisés et d'y répondre.
 
-## 🚀 Fonctionnalités implémentées
+##  Fonctionnalités implémentées
 
 - **Tableau de bord (Dashboard)** : Visualisation de tous les sondages créés, avec accès rapide à l'édition, la suppression et le lien de partage.
 - **Éditeur de sondage** : Interface dynamique pour gérer la question, les options (ajout/suppression illimité) et les paramètres :
@@ -17,7 +17,7 @@ Ce projet est une application de gestion et de participation à des sondages, r�
     - Aperçu graphique des résultats via des barres de progression dynamiques.
     - Gestion intelligente des accès (doit être connecté pour voter).
 
-## 🛠️ Choix Techniques & Architecture
+##  Choix Techniques & Architecture
 
 ### Frontend (Vue.js 3.4)
 - **Architecture modulaire** : Découpage en pages (`DashboardPage`, `PollEditorPage`) et composants réutilisables.
@@ -32,7 +32,7 @@ Ce projet est une application de gestion et de participation à des sondages, r�
 - **Sécurité** : Validation stricte des données entrantes et gestion des autorisations (Middleware `auth`).
 - **Logique métier** : Calcul automatique des dates d'expiration et transactions SQL pour garantir l'intégrité des votes.
 
-## 📦 Installation
+##  Installation
 
 1. **Cloner le projet** :
    ```bash
