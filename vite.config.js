@@ -11,6 +11,10 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/poll-dashboard.js",
                 "resources/js/poll-dashboard-integrated.js",
+                /*
+                pour compiler apppollviewer et toutes ses dependances
+                pour du coup utiliser pour la page polls{token}
+                */
                 "resources/js/poll-viewer.js",
             ],
             refresh: true,

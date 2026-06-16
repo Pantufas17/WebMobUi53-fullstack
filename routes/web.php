@@ -1,4 +1,8 @@
 <?php
+/*
+toutes les routes web pages HTML contraireemnt au api.php qui gere les routes json
+Ici les routes vont du coup retourner une vue blade.
+*/
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LikeController;
@@ -27,6 +31,8 @@ Route::get('/@{username}', [ProfileController::class, 'show'])->where('username'
 
 Route::resource('posts', PostController::class)->only(['index', 'show']);
 
+
+//routes d'authentification fournis deja (login, register, logout)
 Route::controller(AuthController::class)->group(function () {
     Route::get('/auth/register', 'showRegister');
     Route::post('/auth/register', 'register');
@@ -34,6 +40,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/auth/login', 'login');
 });
 
+
+//routes protegees qui sont necessaires qu on soit conectés
 Route::middleware('auth')->group(function () {
     Route::get('/polls/dashboard', PollDashboardController::class)->name('polls.dashboard');
     // Route::get('/polls/dashboard-integrated', fn() => view('polls.dashboard-integrated'))
@@ -45,6 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
+
+//route publique pour la page de vote pour les sondages
+//accessible sans etre connecte tjrs avec ce token
+//le regex ->where() assure que le token ne contien que des lettres et chiffres
+//evite du coup les conflits avec dautres routes comme polls/dashboard
 Route::get('/polls/{token}', function (string $token) {
     return view('polls.viewer', ['token' => $token]);
 })->where('token', '[A-Za-z0-9]+');
