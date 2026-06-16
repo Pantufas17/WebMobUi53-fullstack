@@ -89,7 +89,7 @@ function editPoll(poll) {
 <template>
     <div>
         <!--
-        JE ME SUIS ARRETE LA-->
+        en tete avec titre et bouton de creation-->
         <div
             style="
                 display: flex;
@@ -99,13 +99,16 @@ function editPoll(poll) {
             "
         >
             <h2 style="margin: 0">Mes sondages</h2>
+            <!--Emet navigate (#create) vers appPolldashboard qui va du coup utiliser le useHashRoute pour  change la page-->
             <button @click="emit('navigate', '#create')">
                 + Nouveau sondage
             </button>
         </div>
 
+        <!--etats de chargement et d erreur-->
         <p v-if="loading">Chargement des sondages...</p>
         <p v-else-if="error">Erreur lors du chargement.</p>
+        <!--boucle pour la liste des soondages-->
         <ul v-else-if="polls" style="padding: 0">
             <li
                 v-for="poll in polls"
@@ -129,6 +132,8 @@ function editPoll(poll) {
                     {{ poll.question }}
                 </div>
 
+                <!--partie pour le lien du vote pour y acceder a la pge et 
+                pouvoir voter-->
                 <div
                     style="margin-bottom: 1rem; color: #666; font-size: 0.9rem"
                 >
