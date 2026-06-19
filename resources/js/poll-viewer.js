@@ -8,6 +8,7 @@ appPollViewer separée du dahsboard, il lui faut son propre fichier
 dentrypoint, sans ca Vite va pas savoir quoi compiler pour la page de vote.
 */
 
+//ici pour le CRSF + XSRF
 import "./bootstrap";
 import { createApp } from "vue";
 import App from "./AppPollViewer.vue";
